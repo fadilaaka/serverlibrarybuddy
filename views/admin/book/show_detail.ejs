@@ -1,0 +1,31 @@
+<%- include('../../partials/head.ejs') %>
+  <body>
+    <div id="wrapper" class="d-flex flex-row col-md-auto">
+      <%- include("../../partials/sidebar.ejs") %>
+        <div class="m-5 w-100">
+          <%- include("../../partials/message.ejs") %>
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="profile-tab-pane" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Detail Buku</button>
+            </li>
+          </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="d-flex flex-column">
+                    <a href="/admin/book" class="btn btn-warning my-2 w-25">Back</a>
+                    <img alt="Image Book" src="http://localhost:3001/<%= book.imageUrl%>" width="250" class="mx-auto"/>
+                    <h1><%= book.title %></h1>
+                    <p><span>Penulis</span> : <%= book.author %></p>
+                    <p><span>Penerbit</span> : <%= book.publisher %></p>
+                    <p><span>Tanggal Terbit</span> : <%= book.publishDate.toLocaleDateString("id-ID") %></p>
+                    <p><span>ISBN</span> : <%= book.isbn %></p>
+                    <p><span>Jumlah Halaman</span> : <%= book.pageCount %></p>
+                    <p><span>Deskripsi</span> : <%= book.description %></p>
+                    <p><span>Kategori Buku</span> : <%= book.idKategori.title %></p>
+                    <p><span>Jenis Buku</span> : <%= book.idKategori.idJenis.title %></p>
+                </div>
+              </div>
+        </div>
+    </div>    
+</body>
+</html>

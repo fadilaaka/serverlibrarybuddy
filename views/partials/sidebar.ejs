@@ -1,0 +1,62 @@
+<div class="d-flex flex-column p-3 bg-light" style="min-width: 280px">
+  <a
+    href="/admin/dashboard"
+    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
+  >
+    <svg class="bi me-2" width="40" height="32">
+      <use xlink:href="#bootstrap"></use>
+    </svg>
+    <span class="fs-4">Admin Dashboard</span>
+  </a>
+  <hr />
+  <ul class="nav nav-pills flex-column mb-auto">
+    <% for ( let i in menu ) { %> <% if ( menu[i].url == url ) { %>
+    <li class="nav-item">
+      <a
+        href="/admin<%= menu[i].url %>"
+        class="nav-link active"
+        aria-current="page"
+      >
+        <i class="<%= menu[i].icon %> align-middle"></i>
+        <span class="ms-1 align-middle"><%= menu[i].name %></span>
+      </a>
+    </li>
+    <% } else if (menu[i].url == '/jenis' && url == '/jenis/kategori') { %>
+    <li class="nav-item">
+      <a href="/admin/jenis" class="nav-link active" aria-current="page">
+        <i class="bi-journal-bookmark align-middle"></i>
+        <span class="ms-1 align-middle">Jenis & Kategori</span>
+      </a>
+    </li>
+    <% } else { %>
+    <li class="nav-item">
+      <a
+        href="/admin<%= menu[i].url %>"
+        class="nav-link link-dark"
+        aria-current="page"
+      >
+        <i class="<%= menu[i].icon %> align-middle"></i>
+        <span class="ms-1 align-middle"><%= menu[i].name %></span>
+      </a>
+    </li>
+    <% } %> <% } %>
+    <hr />
+    <div class="dropdown">
+      <a
+        href="#"
+        class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+        id="dropdownUser2"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <strong class="ms-3">Admin</strong>
+      </a>
+      <ul
+        class="dropdown-menu text-small shadow"
+        aria-labelledby="dropdownUser2"
+      >
+        <li><a class="dropdown-item" href="/admin/logout">Sign Out</a></li>
+      </ul>
+    </div>
+  </ul>
+</div>

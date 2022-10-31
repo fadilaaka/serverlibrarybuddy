@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="\css\login.css" />
+    <link rel="stylesheet" href="\css\bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+    <script src="\js\bootstrap.bundle.min.js"></script>
+    <script src="\js\jquery-3.5.1.min.js"></script>
+    <title><%= title %></title>
+  </head>
+  <body class="bg-slate-400">
+    <div class="login-page">
+      <%- include("partials/message.ejs") %>
+      <div class="form">
+        <form class="login-form" action="/admin/signin" method="POST">
+          <input type="text" placeholder="username" name="username" />
+          <input type="password" placeholder="password" name="password" />
+          <button type="submit">login</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

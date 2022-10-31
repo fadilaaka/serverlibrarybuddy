@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "fs-extra": "^10.1.0",
+    "jquery": "^3.6.1",
+    "mongoose": "^6.7.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "name": "server-web-perpus",
+  "version": "1.0.0",
+  "description": "Make this for practice study web",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

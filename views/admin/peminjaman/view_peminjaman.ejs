@@ -1,0 +1,91 @@
+<%- include('../../partials/head.ejs') %>
+  <body>
+    <div id="wrapper" class="d-flex flex-row col-md-auto">
+      <%- include("../../partials/sidebar.ejs") %>
+        <div class="m-5 w-100">
+          <%- include("../../partials/message.ejs") %>
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Peminjaman</button>
+            </li>
+          </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <div class="card shadow">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="table-light">
+                                <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Tanggal Peminjaman</th>
+                                <th scope="col">Tanggal Pengembalian</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Buku</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                              <% for(let i=0; i < peminjaman.length; i++) { %>
+                                <tr>
+                                    <th><%= i+1 %></th>
+                                    <td><%= peminjaman[i].tanggalPeminjaman.toLocaleString().split(",")[0] %></td>
+                                    <td><%= peminjaman[i].tanggalPengembalian.toLocaleString().split(",")[0] %></td>
+                                    <td><%= peminjaman[i].anggota.name %></td>
+                                    <td><%= peminjaman[i].book.title %></td>
+                                    <td><%= peminjaman[i].status %></td>
+                                    <td>
+                                      <form
+                                        action="/admin/peminjaman/approve/<%= peminjaman[i].id %>?_method=PUT"
+                                        method="POST"
+                                      >
+                                      <button type="submit" class="btn btn-circle btn-success btn-sm button-update m-1">
+                                        Approve
+                                      </button>
+                                    </form>
+                                    <form
+                                      action="/admin/peminjaman/reject/<%= peminjaman[i].id %>?_method=PUT"
+                                      method="POST"
+                                    >
+                                        <button type="submit" class="btn btn-warning btn-circle btn-sm m-1">
+                                          Reject
+                                        </button>
+                                      </form>
+                                      <form
+                                        action="/admin/peminjaman/delete/<%= peminjaman[i].id %>?_method=DELETE"
+                                        method="POST"
+                                      >
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm m-1">
+                                          <i class="bi bi-trash"></i>
+                                        </button>
+                                      </form>
+                                      </td>
+                                  </tr>
+                              <% } %>
+                              </tbody>
+                            </table>
+                          </div>
+                    </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>    
+    <script>
+      $(document).ready(function() {
+        $('#dataTable').DataTable();
+      });
+      $("#dataTable").on("click", ".button-update", function() {
+        let id = $(this).data("id")
+        let title = $(this).data("title")
+        console.log("id: ", id)
+        console.log("title: ", title)
+        $("#edit-modal").modal("show")
+        $(".id").val(id)
+        $(".title").val(title)
+      })
+    </script>
+</body>
+</html>

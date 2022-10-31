@@ -1,0 +1,57 @@
+<div
+  class="modal fade"
+  id="add-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Tambah Kategori Buku
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form action="/admin/jenis/kategori/add" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="idJenis" class="col-form-label">Jenis Buku</label>
+            <select class="form-select" name="idJenis" required>
+              <option value="">--- Jenis Buku ---</option>
+              <% for(let i = 0; i< jenis.length; i++){ %>
+              <option value="<%= jenis[i].id %>"><%= jenis[i].title %></option>
+              <% } %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="title" class="col-form-label">Kategori Buku</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              placeholder="Masukkan kategori buku..."
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+<%- include('../../partials/head.ejs') %>
+  <body>
+    <div id="wrapper" class="d-flex flex-row col-md-auto">
+      <%- include("../../partials/sidebar.ejs") %>
+        <div class="m-5 w-100">
+          <%- include("../../partials/message.ejs") %>
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Edit Buku</button>
+            </li>
+          </ul>
+          <a href="/admin/book" class="btn btn-warning my-2 w-25">Back</a>
+            <div class="tab-content" id="myTabContent">
+                    <div class="card shadow mb-4 mt-2">
+                        <div class="card-body">
+                          <form action="/admin/book/edit/<%= book.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                            <div class="form-group mb-3">
+                              <label class="form-label required" for="updateTitle">Judul Buku</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="updateTitle"
+                                placeholder="Enter judul buku"
+                                value="<%= book.title %>"
+                                required
+                              />
+                            </div>
+                            <div class="form-group mb-3">
+                              <label class="form-label required" for="updateAuthor">Penulis</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="updateAuthor"
+                                placeholder="Enter penulis" 
+                                value="<%= book.author %>"
+                                required
+                              />
+                            </div>
+                            <div class="form-group mb-3">
+                              <label class="form-label required" for="updatePublisher">Penerbit</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="updatePublisher"
+                                placeholder="Enter penerbit" 
+                                value="<%= book.publisher %>"
+                                required
+                              />
+                            </div>
+                            <div class="form-group mb-3">
+                              <label class="form-label required" for="updatePublishDate">Tanggal Terbit</label>
+                              <input
+                                type="date"
+                                class="form-control"
+                                name="updatePublishDate"
+                                placeholder="Enter tanggal terbit" 
+                                value="<%= book.publishDate.toISOString().split('T')[0] %>"
+                                required
+                              />
+                            </div>
+
+                            <div class="form-group mb-3">
+                              <label class="form-label" for="updateIsbn">ISBN</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="updateIsbn"
+                                placeholder="Enter ISBN"
+                                value="<%= book.isbn %>"
+                              />
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="updateImage">Image</label>
+                                <input
+                                  type="file"
+                                  class="form-control"
+                                  name="updateImage"
+                                />
+                                <span class="fw-bold"><%= book.imageUrl %></span>
+                              </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="form-label required" for="updatePageCount">Jumlah Halaman</label>
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  name="updatePageCount"
+                                  placeholder="Enter jumlah halaman"
+                                  value="<%= book.pageCount %>"
+                                  required
+                                />
+                              </div>
+                            <div class="form-group mb-3">
+                              <label class="form-label" for="updateDescription">Description</label>
+                              <textarea class="form-control" name="updateDescription" id="description" rows="5" required><%= book.description %></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="name">Jenis & Kategori Buku</label>
+                                <select class="form-select" name="updateIdKategori">
+                                  <option value="<%= book.idKategori.id %>">--- <%= book.idKategori.title %> ---</option>
+                                  <% for(let i=0; i < jenis.length; i++) { %>
+                                    <optgroup label="<%= jenis[i].title %>">
+                                      <% jenis[i].idKategori.map(item => { %>
+                                        <option value="<%= item.id %>"><%= item.title %></option>
+                                      <% }) %>
+                                    </optgroup>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                          </form>
+                        </div>
+                      </div>
+              </div>
+        </div>
+    </div>    
+    <script>
+      $(document).ready(function() {
+        $('#dataTable').DataTable();
+      });
+      $("#dataTable").on("click", ".button-update", function() {
+        let id = $(this).data("id")
+        let title = $(this).data("title")
+        console.log("id: ", id)
+        console.log("title: ", title)
+        $("#edit-modal").modal("show")
+        $(".id").val(id)
+        $(".title").val(title)
+      })
+    </script>
+</body>
+</html>

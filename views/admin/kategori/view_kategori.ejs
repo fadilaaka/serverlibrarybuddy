@@ -1,0 +1,91 @@
+<%- include('../../partials/head.ejs') %>
+  <body>
+    <div id="wrapper" class="d-flex flex-row col-md-auto">
+      <%- include("../../partials/sidebar.ejs") %>
+        <div class="m-5 w-100">
+          <%- include("../../partials/message.ejs") %>
+
+          <ul class="nav nav-tabs">
+          <% for ( let i in tabsJenisKategori ) { %> <% if ( tabsJenisKategori[i].url == url ) { %>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/admin<%= tabsJenisKategori[i].url%>"><%= tabsJenisKategori[i].name %></a>
+              </li>
+              <% } else { %>
+                <li class="nav-item">
+                  <a class="nav-link link-dark" aria-current="page" href="/admin<%= tabsJenisKategori[i].url%>"><%= tabsJenisKategori[i].name %></a>
+                </li>
+                <% } %> <% } %>
+              </ul>
+        
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">
+                  <i class="bi bi-bookmark-plus"></i>
+                </button>
+              </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="col">No</th>
+                          <th scope="col">Kategori Buku</th>
+                          <th scope="col">Jenis Buku</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-group-divider">
+                        <% for(let i=0; i < kategori.length; i++) { %> 
+                          <tr>
+                            <th><%= i+1 %></th>
+                            <td><%= kategori[i].title %></td>
+                            <% if(!kategori[i].idJenis) { %>
+                              <td>-</td>
+                            <%} else {%>
+                              <td><%= kategori[i].idJenis.title %></td>
+                            <%}%>
+                            <td>
+                              <form
+                                action="/admin/jenis/kategori/delete/<%= kategori[i].id %>?_method=DELETE"
+                                method="POST"
+                              >
+                                <a
+                                  type="button"
+                                  class="btn btn-circle btn-warning btn-sm button-update"
+                                  data-id="<%= kategori[i].id %>" 
+                                  data-title="<%= kategori[i].title %>"
+                                >
+                                  <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <button type="submit" class="btn btn-danger btn-circle btn-sm">
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </form>
+                            </td>
+                          </tr>
+                          <% } %>
+                      </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>    
+    <%- include("edit_kategori.ejs") %>
+    <%- include("modal_kategori.ejs") %>
+    <script>
+      $(document).ready(function() {
+        $('#dataTable').DataTable();
+      });
+      $("#dataTable").on("click", ".button-update", function() {
+        let id = $(this).data("id")
+        let title = $(this).data("title")
+        console.log("id: ", id)
+        console.log("title: ", title)
+        $("#edit-modal").modal("show")
+        $(".id").val(id)
+        $(".title").val(title)
+      })
+    </script>
+</body>
+</html>
