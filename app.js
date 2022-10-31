@@ -8,9 +8,12 @@ const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/dblibrarybuddy", {
-  autoIndex: false,
-});
+mongoose.connect(
+  "mongodb+srv://adminbuddy:3gOk3H1s3gikNKjv@cluster0.i9lntqd.mongodb.net/?retryWrites=true&w=majority",
+  {
+    autoIndex: false,
+  }
+);
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -31,7 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/admin", adminRouter);
-// app.use("/admin/v1/api", apiRouter);
+app.use("/v1/api", apiRouter);
 
 app.listen(3001, (error) => {
   if (error) console.log(error);

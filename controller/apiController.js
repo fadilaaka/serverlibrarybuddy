@@ -6,7 +6,16 @@ module.exports = {
   homePage: async (req, res) => {
     try {
       const jenis = await Jenis.find();
-      const kategori = await Kategori.find();
+      const kategori = await Kategori.find()
+        .populate({
+          path: "idJenis",
+          select: "id title",
+        })
+        .populate({ path: "books", select: "id title author" });
+      res.status(200).json({
+        jenis: jenis,
+        kategori: kategori,
+      });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
     }
