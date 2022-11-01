@@ -21,21 +21,28 @@ module.exports = {
     }
   },
   register: async (req, res) => {
-    try {
-      const anggota = await Anggota.create({
-        code: Math.floor(Math.random() * 100000000),
-        username,
-        password,
-        name,
-        telp,
-        alamat,
-      });
-      res.status(201).json({
-        message: "Succes registrasi akun",
-        anggota,
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
+    const { username, password, name, telp, alamat } = req.body;
+    if (
+      username === undefined ||
+      password === undefined ||
+      name === undefined ||
+      telp === undefined ||
+      alamat === undefined
+    ) {
+      return res.status(404).json({ message: "Lengkapi semua field" });
     }
+
+    const anggota = await Anggota.create({
+      code: Math.floor(Math.random() * 100000000),
+      username: username,
+      password: password,
+      name: name,
+      telp: telp,
+      alamat: alamat,
+    });
+    res.status(201).json({
+      message: "Succes registrasi akun",
+      anggota,
+    });
   },
 };
