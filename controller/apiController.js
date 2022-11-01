@@ -30,7 +30,7 @@ module.exports = {
         telp,
         alamat,
       });
-      res.status(200).json({
+      res.status(201).json({
         message: "Succes registrasi akun",
         anggota,
       });
