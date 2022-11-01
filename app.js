@@ -36,7 +36,9 @@ app.use("/", indexRouter);
 app.use("/admin", adminRouter);
 app.use("/v1/api", apiRouter);
 
-app.listen(3001, (error) => {
+const port = server.listen(process.env.PORT || 3000);
+
+app.listen(port, (error) => {
   if (error) console.log(error);
   console.log("Server online on port 3001");
 });
