@@ -16,7 +16,7 @@
   "description": "Make this for practice study web",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "engines": {
     "node": "16.15.1",
