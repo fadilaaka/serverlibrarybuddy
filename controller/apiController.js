@@ -12,7 +12,7 @@ module.exports = {
           path: "idJenis",
           select: "id title",
         })
-        .populate({ path: "books", select: "id title author" });
+        .populate({ path: "books", select: "id title author imageUrl" });
       res.status(200).json({
         jenis: jenis,
         kategori: kategori,
@@ -50,19 +50,20 @@ module.exports = {
     try {
       const { username, password } = req.body;
       const anggota = await Anggota.findOne({ username: username });
+
       if (!anggota) {
-        return res.status(500).json({ message: "Username tidak ada" });
+        return res.status(200).json({ message: "Invalid username & password" });
       }
       const isPasswordMatch = await bcrypt.compare(password, anggota.password);
       if (!isPasswordMatch) {
-        return res.status(500).json({ message: "Password tidak cocok" });
+        return res.status(200).json({ message: "Password doesnt match" });
       }
       res.status(200).json({
         message: "Succes registrasi akun",
         anggota,
       });
     } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ message: `Internal Server Error` });
     }
   },
   // peminjaman: async (req, res) => {
