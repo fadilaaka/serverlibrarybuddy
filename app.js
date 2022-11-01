@@ -3,6 +3,7 @@ const path = require("path");
 const flash = require("connect-flash");
 const session = require("express-session");
 const app = express();
+const cors = require("cors");
 const indexRouter = require("./routes/index");
 const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
@@ -15,6 +16,7 @@ mongoose.connect(
   }
 );
 
+app.use(cors());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.json());
