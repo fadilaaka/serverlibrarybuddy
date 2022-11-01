@@ -45,4 +45,23 @@ module.exports = {
       anggota,
     });
   },
+  // login: async (req, res) => {},
+  // peminjaman: async (req, res) => {
+  //   const anggota = await Anggota.find();
+  //   const { tanggalPengembalian } = req.body;
+  //   if (
+  //     username === undefined ||
+  //     password === undefined ||
+  //     name === undefined ||
+  //     telp === undefined ||
+  //     alamat === undefined
+  //   ) {
+  //     return res.status(404).json({ message: "Lengkapi semua form" });
+  //   }
+
+  //   res.status(201).json({
+  //     message: "Succes registrasi akun",
+  //     anggota,
+  //   });
+  // },
 };
