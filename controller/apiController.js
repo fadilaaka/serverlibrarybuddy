@@ -1,6 +1,7 @@
 const Jenis = require("../models/Jenis");
 const Kategori = require("../models/Kategori");
 const Anggota = require("../models/Anggota");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
   homePage: async (req, res) => {
@@ -45,8 +46,27 @@ module.exports = {
       anggota,
     });
   },
-  // login: async (req, res) => {},
+  login: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const anggota = await Anggota.findOne({ username: username });
+      if (!anggota) {
+        return res.status(500).json({ message: "Username tidak ada" });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, anggota.password);
+      if (!isPasswordMatch) {
+        return res.status(500).json({ message: "Password tidak cocok" });
+      }
+      res.status(200).json({
+        message: "Succes registrasi akun",
+        anggota,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
   // peminjaman: async (req, res) => {
+  //   const { id } = req.params;
   //   const anggota = await Anggota.find();
   //   const { tanggalPengembalian } = req.body;
   //   if (
@@ -60,8 +80,7 @@ module.exports = {
   //   }
 
   //   res.status(201).json({
-  //     message: "Succes registrasi akun",
-  //     anggota,
+  //     message: "Succes request peminjaman",
   //   });
   // },
 };
