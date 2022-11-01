@@ -22,16 +22,17 @@ module.exports = {
   },
   register: async (req, res) => {
     try {
-      await Jenis.find();
-      const kategori = await Kategori.find()
-        .populate({
-          path: "idJenis",
-          select: "id title",
-        })
-        .populate({ path: "books", select: "id title author" });
+      const anggota = await Anggota.create({
+        code: Math.floor(Math.random() * 100000000),
+        username,
+        password,
+        name,
+        telp,
+        alamat,
+      });
       res.status(200).json({
-        jenis: jenis,
-        kategori: kategori,
+        message: "Succes registrasi akun",
+        anggota,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
