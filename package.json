@@ -19,7 +19,8 @@
     "start": "nodemon app.js"
   },
   "engines": {
-    "node": "16.15.1"
+    "node": "16.15.1",
+    "npm": "8.19.2"
   },
   "author": "",
   "license": "ISC"
