@@ -103,10 +103,14 @@ module.exports = {
   apiUserId: async (req, res) => {
     try {
       const { idAnggota } = req.params;
-      const anggota = await Anggota.findOne({ _id: idAnggota }).populate({
-        path: "books",
-        select: "id title author description",
-      });
+      const anggota = await Anggota.findOne({ _id: idAnggota })
+        .populate({
+          path: "books",
+        })
+        .populate({
+          path: "peminjaman",
+        });
+
       res.status(200).json({ message: "Success get", anggota });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
