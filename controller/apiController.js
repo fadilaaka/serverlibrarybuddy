@@ -1,6 +1,7 @@
 const Jenis = require("../models/Jenis");
 const Kategori = require("../models/Kategori");
 const Anggota = require("../models/Anggota");
+const Book = require("../models/Book");
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -52,11 +53,11 @@ module.exports = {
       const anggota = await Anggota.findOne({ username: username });
 
       if (!anggota) {
-        return res.status(200).json({ message: "Invalid username & password" });
+        return res.status(500).json({ message: "Invalid username & password" });
       }
       const isPasswordMatch = await bcrypt.compare(password, anggota.password);
       if (!isPasswordMatch) {
-        return res.status(200).json({ message: "Password doesnt match" });
+        return res.status(500).json({ message: "Password doesnt match" });
       }
       res.status(200).json({
         message: "Succes registrasi akun",
@@ -66,22 +67,16 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error` });
     }
   },
-  // peminjaman: async (req, res) => {
-  //   const { id } = req.params;
-  //   const anggota = await Anggota.find();
-  //   const { tanggalPengembalian } = req.body;
-  //   if (
-  //     username === undefined ||
-  //     password === undefined ||
-  //     name === undefined ||
-  //     telp === undefined ||
-  //     alamat === undefined
-  //   ) {
-  //     return res.status(404).json({ message: "Lengkapi semua form" });
-  //   }
-
-  //   res.status(201).json({
-  //     message: "Succes request peminjaman",
-  //   });
-  // },
+  detail: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const book = await Book.findById({ _id: id });
+      res.status(200).json({
+        message: "Succes registrasi akun",
+        book,
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
 };
