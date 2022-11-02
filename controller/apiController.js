@@ -82,9 +82,9 @@ module.exports = {
   },
   apiPinjamBuku: async (req, res) => {
     try {
-      const { id } = req.params;
-      const { tanggalPengembalian, idAnggota, idBook } = req.body;
-      const book = await Book.findById({ _id: id });
+      const { idBook, idAnggota } = req.params;
+      const { tanggalPengembalian } = req.body;
+
       await Peminjaman.create({
         tanggalPeminjaman: new Date(),
         tanggalPengembalian: tanggalPengembalian,
