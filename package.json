@@ -3,6 +3,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -16,7 +17,11 @@
   "description": "Make this for practice study web",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "16.15.1",
+    "npm": "8.19.2"
   },
   "author": "",
   "license": "ISC"
