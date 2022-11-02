@@ -84,6 +84,7 @@ module.exports = {
     try {
       const { idBook, idAnggota } = req.params;
       const { tanggalPengembalian } = req.body;
+      const anggota = await Anggota.findOne({ _id: idAnggota });
 
       await Peminjaman.create({
         tanggalPeminjaman: new Date(),
@@ -91,7 +92,9 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
       });
-      res.status(201).json({ message: "Succes pinjam bukus" });
+      anggota.books.push(idBook);
+      await anggota.save();
+      res.status(201).json({ message: "Succes pinjam buku" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
