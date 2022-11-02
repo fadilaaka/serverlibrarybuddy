@@ -2,6 +2,7 @@ const Jenis = require("../models/Jenis");
 const Kategori = require("../models/Kategori");
 const Anggota = require("../models/Anggota");
 const Book = require("../models/Book");
+const Peminjaman = require("../models/Peminjaman");
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -75,6 +76,22 @@ module.exports = {
         message: "Succes registrasi akun",
         book,
       });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  apiPinjamBuku: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { tanggalPengembalian, idAnggota, idBook } = req.body;
+      const book = await Book.findById({ _id: id });
+      await Peminjaman.create({
+        tanggalPeminjaman: new Date(),
+        tanggalPengembalian: tanggalPengembalian,
+        anggota: idAnggota,
+        book: idBook,
+      });
+      res.status(201).json({ message: "Succes pinjam bukus" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
