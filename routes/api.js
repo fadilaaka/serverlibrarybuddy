@@ -9,5 +9,6 @@ router.post(
   "/peminjaman/:idBook/:idAnggota/pinjam",
   apiController.apiPinjamBuku
 );
+router.get("/list-peminjaman/:idAnggota", apiController.apiUserId);
 
 module.exports = router;

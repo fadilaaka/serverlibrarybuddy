@@ -28,6 +28,12 @@ const anggotaSchema = new mongoose.Schema({
       ref: "Book",
     },
   ],
+  peminjaman: [
+    {
+      type: ObjectId,
+      ref: "Peminjaman",
+    },
+  ],
 });
 
 anggotaSchema.pre("save", async function (next) {

@@ -86,15 +86,28 @@ module.exports = {
       const { tanggalPengembalian } = req.body;
       const anggota = await Anggota.findOne({ _id: idAnggota });
 
-      await Peminjaman.create({
+      const peminjaman = await Peminjaman.create({
         tanggalPeminjaman: new Date(),
         tanggalPengembalian: tanggalPengembalian,
         anggota: idAnggota,
         book: idBook,
       });
-      anggota.books.push(idBook);
+      anggota.books.push({ _id: idBook });
+      anggota.peminjaman.push({ _id: peminjaman._id });
       await anggota.save();
       res.status(201).json({ message: "Succes pinjam buku" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  apiUserId: async (req, res) => {
+    try {
+      const { idAnggota } = req.params;
+      const anggota = await Anggota.findOne({ _id: idAnggota }).populate({
+        path: "books",
+        select: "id title author description",
+      });
+      res.status(200).json({ message: "Success get", anggota });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
