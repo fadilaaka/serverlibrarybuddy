@@ -110,9 +110,8 @@ module.exports = {
         })
         .populate({
           path: "peminjaman",
-          select: "id tanggalPeminjaman tanggalPengembalian",
+          select: "id tanggalPeminjaman tanggalPengembalian book",
         });
-
       res.status(200).json({ message: "Success get", anggota });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
