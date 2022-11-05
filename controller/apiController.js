@@ -4,6 +4,7 @@ const Anggota = require("../models/Anggota");
 const Book = require("../models/Book");
 const Peminjaman = require("../models/Peminjaman");
 const bcrypt = require("bcryptjs");
+const Pengembalian = require("../models/Pengembalian");
 
 module.exports = {
   homePage: async (req, res) => {
@@ -92,9 +93,17 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
       });
+      await Pengembalian.create({
+        tanggalPeminjaman: new Date(),
+        tanggalPengembalian: tanggalPengembalian,
+        anggota: idAnggota,
+        book: idBook,
+      });
+      
       anggota.books.push({ _id: idBook });
       anggota.peminjaman.push({ _id: peminjaman._id });
       await anggota.save();
+      
       res.status(201).json({ message: "Succes pinjam buku" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });

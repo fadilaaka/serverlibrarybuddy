@@ -37,22 +37,26 @@
                                     <td><%= peminjaman[i].book.title %></td>
                                     <td><%= peminjaman[i].status %></td>
                                     <td>
+                                    
+                                    <% if (peminjaman[i].status === "belum dikonfirmasi") { %>
                                       <form
-                                        action="/admin/peminjaman/approve/<%= peminjaman[i].id %>?_method=PUT"
+                                          action="/admin/peminjaman/approve/<%= peminjaman[i].id %>?_method=PUT"
+                                          method="POST"
+                                        >
+                                        <button type="submit" class="btn btn-circle btn-success btn-sm button-update m-1" onclick="style.display = 'none'">
+                                          Approve
+                                        </button>
+                                      </form>
+                                      <form
+                                        action="/admin/peminjaman/reject/<%= peminjaman[i].id %>?_method=PUT"
                                         method="POST"
                                       >
-                                      <button type="submit" class="btn btn-circle btn-success btn-sm button-update m-1">
-                                        Approve
-                                      </button>
-                                    </form>
-                                    <form
-                                      action="/admin/peminjaman/reject/<%= peminjaman[i].id %>?_method=PUT"
-                                      method="POST"
-                                    >
-                                      <button type="submit" class="btn btn-warning btn-circle btn-sm m-1">
-                                        Reject
-                                      </button>
-                                    </form>
+                                        <button type="submit" class="btn btn-warning btn-circle btn-sm m-1">
+                                          Reject
+                                        </button>
+                                      </form>
+                                    <% } %>  
+                                    
                                       <form
                                         action="/admin/peminjaman/delete/<%= peminjaman[i].id %>?_method=DELETE"
                                         method="POST"
