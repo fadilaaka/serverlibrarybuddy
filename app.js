@@ -47,7 +47,7 @@ app.use("/", indexRouter);
 app.use("/admin", adminRouter);
 app.use("/v1/api", apiRouter);
 
-app.listen(process.env.PORT || 3000, (error) => {
+app.listen(process.env.PORT || 5000, (error) => {
   if (error) console.log(error);
-  console.log("Server online on port 3000");
+  console.log("Server online on port 5000");
 });
