@@ -9,7 +9,10 @@ const Pengembalian = require("../models/Pengembalian");
 module.exports = {
   homePage: async (req, res) => {
     try {
-      const jenis = await Jenis.find();
+      const jenis = await Jenis.find().populate({
+        path: "idKategori",
+        select: "id title",
+      });
       const kategori = await Kategori.find()
         .populate({
           path: "idJenis",
@@ -99,11 +102,11 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
       });
-      
+
       anggota.books.push({ _id: idBook });
       anggota.peminjaman.push({ _id: peminjaman._id });
       await anggota.save();
-      
+
       res.status(201).json({ message: "Succes pinjam buku" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
