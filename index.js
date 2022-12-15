@@ -19,7 +19,6 @@ mongoose.connect(
 app.use(cors());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set("trust proxy", 1);
 app.use(express.json());
 
 app.use(
@@ -28,8 +27,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true,
-      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 30,
     },
   })
 );
