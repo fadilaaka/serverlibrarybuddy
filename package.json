@@ -20,8 +20,7 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "16.15.1",
-    "npm": "8.19.2"
+    "node": "14.x"
   },
   "author": "",
   "license": "ISC"
