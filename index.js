@@ -20,12 +20,12 @@ mongoose.connect(
 app.use(cors());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set("trust proxy", 1);
+app.set("trust proxy");
 app.use(express.json());
 app.use(
   session({
     secret: "keyboard cat",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 30,

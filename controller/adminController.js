@@ -97,7 +97,6 @@ module.exports = {
   },
   viewDashboard: async (req, res) => {
     try {
-      console.log(req.session);
       const jenis = await Jenis.find();
       const kategori = await Kategori.find();
       const book = await Book.find();
