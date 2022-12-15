@@ -15,9 +15,9 @@
   "name": "server-web-perpus",
   "version": "1.0.0",
   "description": "Make this for practice study web",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "engines": {
     "node": "16.x"
