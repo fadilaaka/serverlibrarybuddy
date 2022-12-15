@@ -8,6 +8,7 @@ const Pengembalian = require("../models/Pengembalian");
 const fs = require("fs-extra");
 const path = require("path");
 const bcrypt = require("bcryptjs");
+const isLogin = require("../middlewares/auth");
 
 const menu = [
   {
@@ -91,28 +92,35 @@ module.exports = {
   },
   actionLogout: async (req, res) => {
     req.session.destroy(() => {
-      req.logout();
-      res.session = null;
+      req.session = null;
       res.redirect("/admin/signin");
     });
   },
   viewDashboard: async (req, res) => {
     try {
+      console.log(req.session);
       const jenis = await Jenis.find();
       const kategori = await Kategori.find();
       const book = await Book.find();
       const anggota = await Anggota.find();
       const peminjaman = await Peminjaman.find();
-      res.render("admin/dashboard/view_dashboard", {
-        title: "Library Buddy | Dashboard",
-        url: req.url,
-        menu: menu,
-        jenis: jenis.length,
-        kategori: kategori.length,
-        book: book.length,
-        anggota: anggota.length,
-        peminjaman: peminjaman.length,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/dashboard/view_dashboard", {
+          title: "Library Buddy | Dashboard",
+          url: req.url,
+          menu: menu,
+          jenis: jenis.length,
+          kategori: kategori.length,
+          book: book.length,
+          anggota: anggota.length,
+          peminjaman: peminjaman.length,
+        });
+      }
     } catch (error) {
       res.redirect("/admin/dashboard");
     }
@@ -123,14 +131,21 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/jenis/view_jenis", {
-        title: "Library Buddy | Jenis Buku",
-        alert,
-        url: req.url,
-        tabsJenisKategori,
-        menu,
-        jenis,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/jenis/view_jenis", {
+          title: "Library Buddy | Jenis Buku",
+          alert,
+          url: req.url,
+          tabsJenisKategori,
+          menu,
+          jenis,
+        });
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -191,15 +206,22 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/kategori/view_kategori", {
-        title: "Library Buddy | Kategori Buku",
-        alert,
-        url: req.url,
-        tabsJenisKategori,
-        menu,
-        jenis,
-        kategori,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/kategori/view_kategori", {
+          title: "Library Buddy | Kategori Buku",
+          alert,
+          url: req.url,
+          tabsJenisKategori,
+          menu,
+          jenis,
+          kategori,
+        });
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -299,15 +321,22 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/book/view_book", {
-        title: "Library Buddy | List Buku",
-        alert,
-        url: req.url,
-        menu,
-        book,
-        jenis,
-        kategori,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/book/view_book", {
+          title: "Library Buddy | List Buku",
+          alert,
+          url: req.url,
+          menu,
+          book,
+          jenis,
+          kategori,
+        });
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -367,16 +396,23 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/book/show_edit", {
-        title: "Library Buddy | Edit Buku",
-        alert,
-        url: req.url,
-        menu,
-        book,
-        jenis,
-        kategori,
-        action: "edit",
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/book/show_edit", {
+          title: "Library Buddy | Edit Buku",
+          alert,
+          url: req.url,
+          menu,
+          book,
+          jenis,
+          kategori,
+          action: "edit",
+        });
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -471,13 +507,20 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/book/show_detail", {
-        title: "Library Buddy | Detail Buku",
-        alert,
-        url: req.url,
-        menu,
-        book,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/book/show_detail", {
+          title: "Library Buddy | Detail Buku",
+          alert,
+          url: req.url,
+          menu,
+          book,
+        });
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -492,13 +535,20 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/anggota/view_anggota", {
-        title: "Library Buddy | Anggota",
-        alert,
-        url: req.url,
-        menu: menu,
-        anggota,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/anggota/view_anggota", {
+          title: "Library Buddy | Anggota",
+          alert,
+          url: req.url,
+          menu: menu,
+          anggota,
+        });
+      }
     } catch (error) {
       res.redirect("/admin/anggota");
     }
@@ -556,13 +606,20 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/peminjaman/view_peminjaman", {
-        title: "Library Buddy | Peminjaman",
-        alert,
-        url: req.url,
-        menu: menu,
-        peminjaman,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/peminjaman/view_peminjaman", {
+          title: "Library Buddy | Peminjaman",
+          alert,
+          url: req.url,
+          menu: menu,
+          peminjaman,
+        });
+      }
     } catch (error) {
       res.redirect("/admin/peminjaman");
     }
@@ -624,13 +681,20 @@ module.exports = {
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
-      res.render("admin/pengembalian/view_pengembalian", {
-        title: "Library Buddy | Pengembalian",
-        alert,
-        url: req.url,
-        menu: menu,
-        pengembalian,
-      });
+      if (req.session.user == null || req.session.user == undefined) {
+        res.render("index", {
+          alert,
+          title: "Library Buddy | Login",
+        });
+      } else {
+        res.render("admin/pengembalian/view_pengembalian", {
+          title: "Library Buddy | Pengembalian",
+          alert,
+          url: req.url,
+          menu: menu,
+          pengembalian,
+        });
+      }
     } catch (error) {
       res.redirect("/admin/pengembalian");
     }
