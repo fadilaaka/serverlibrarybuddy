@@ -8,6 +8,7 @@ const indexRouter = require("./routes/index");
 const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
 const bodyParser = require("body-parser");
+const livereload = require("connect-livereload");
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://adminbuddy:3gOk3H1s3gikNKjv@cluster0.i9lntqd.mongodb.net/?retryWrites=true&w=majority",
@@ -28,10 +29,12 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 30,
+      secure: false,
     },
   })
 );
 app.use(flash());
+app.use(livereload());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
