@@ -8,7 +8,6 @@ const indexRouter = require("./routes/index");
 const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
 const bodyParser = require("body-parser");
-const livereload = require("connect-livereload");
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://adminbuddy:3gOk3H1s3gikNKjv@cluster0.i9lntqd.mongodb.net/?retryWrites=true&w=majority",
@@ -20,7 +19,6 @@ mongoose.connect(
 app.use(cors());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set("trust proxy");
 app.use(express.json());
 app.use(
   session({
@@ -34,7 +32,6 @@ app.use(
   })
 );
 app.use(flash());
-app.use(livereload());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
