@@ -8,6 +8,7 @@ const indexRouter = require("./routes/index");
 const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://adminbuddy:3gOk3H1s3gikNKjv@cluster0.i9lntqd.mongodb.net/?retryWrites=true&w=majority",
@@ -34,6 +35,7 @@ app.use(
 app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
