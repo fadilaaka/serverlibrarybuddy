@@ -3,6 +3,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "connect-flash": "^0.1.1",
+    "connect-livereload": "^0.6.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
@@ -15,13 +17,12 @@
   "name": "server-web-perpus",
   "version": "1.0.0",
   "description": "Make this for practice study web",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "engines": {
-    "node": "16.15.1",
-    "npm": "8.19.2"
+    "node": "16.x"
   },
   "author": "",
   "license": "ISC"

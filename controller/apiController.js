@@ -28,6 +28,8 @@ module.exports = {
     }
   },
   register: async (req, res) => {
+    console.log("Ini FILES : ", req.files);
+    console.log("Ini FILE : ", req.file);
     const { username, password, name, telp, alamat } = req.body;
     if (
       username === undefined ||
@@ -39,18 +41,35 @@ module.exports = {
       return res.status(404).json({ message: "Lengkapi semua field" });
     }
 
-    const anggota = await Anggota.create({
-      code: Math.floor(Math.random() * 100000000),
-      username: username,
-      password: password,
-      name: name,
-      telp: telp,
-      alamat: alamat,
-    });
-    res.status(201).json({
-      message: "Succes registrasi akun",
-      anggota,
-    });
+    if (req.file !== undefined) {
+      const anggota = await Anggota.create({
+        code: Math.floor(Math.random() * 100000000),
+        username: username,
+        password: password,
+        name: name,
+        telp: telp,
+        alamat: alamat,
+        imageUrl: `images/${req.file.filename}`,
+      });
+      res.status(201).json({
+        message: "Succes registrasi akun",
+        anggota,
+      });
+    } else {
+      const anggota = await Anggota.create({
+        code: Math.floor(Math.random() * 100000000),
+        username: username,
+        password: password,
+        name: name,
+        telp: telp,
+        alamat: alamat,
+        imageUrl: ``,
+      });
+      res.status(201).json({
+        message: "Succes registrasi akun",
+        anggota,
+      });
+    }
   },
   login: async (req, res) => {
     try {
@@ -65,7 +84,7 @@ module.exports = {
         return res.status(500).json({ message: "Password doesnt match" });
       }
       res.status(200).json({
-        message: "Succes registrasi akun",
+        message: "Succes login akun",
         anggota,
       });
     } catch (error) {
@@ -77,7 +96,7 @@ module.exports = {
       const { id } = req.params;
       const book = await Book.findById({ _id: id });
       res.status(200).json({
-        message: "Succes registrasi akun",
+        message: "Succes get detail buku",
         book,
       });
     } catch (error) {

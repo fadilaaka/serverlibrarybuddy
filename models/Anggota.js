@@ -22,6 +22,9 @@ const anggotaSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageUrl: {
+    type: String,
+  },
   books: [
     {
       type: ObjectId,

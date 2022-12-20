@@ -90,8 +90,10 @@ module.exports = {
     }
   },
   actionLogout: async (req, res) => {
-    req.session.destroy();
-    res.redirect("/admin/signin");
+    req.session.destroy(() => {
+      req.session = null;
+      res.redirect("/admin/signin");
+    });
   },
   viewDashboard: async (req, res) => {
     try {
