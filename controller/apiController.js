@@ -137,11 +137,14 @@ module.exports = {
       const anggota = await Anggota.findOne({ _id: idAnggota })
         .populate({
           path: "books",
-          select: "id title",
+          select: "id title imageUrl",
         })
         .populate({
           path: "peminjaman",
           select: "id tanggalPeminjaman tanggalPengembalian book",
+          populate: {
+            path: "book",
+          },
         });
       res.status(200).json({ message: "Success get", anggota });
     } catch (error) {
