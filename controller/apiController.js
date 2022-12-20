@@ -151,4 +151,88 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
+
+  // Tambahan API buat REACT ADMIN
+  viewJenisKategoriReact: async (req, res) => {
+    try {
+      const kategori = await Kategori.find().populate({
+        path: "idJenis",
+        select: "id title",
+      });
+      const jenis = await Jenis.find().populate({
+        path: "idKategori",
+        select: "id title",
+      });
+      res.status(200).json({
+        kategori: kategori,
+        jenis: jenis,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  viewAdminBookReact: async (req, res) => {
+    try {
+      const book = await Book.find().populate({
+        path: "idKategori",
+        select: "id title idJenis",
+        populate: { path: "idJenis", select: "id title" },
+      });
+      const kategori = await Kategori.find().populate({
+        path: "idJenis",
+        select: "id title",
+      });
+      const jenis = await Jenis.find().populate({
+        path: "idKategori",
+        select: "id title",
+      });
+      res.status(200).json(book);
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  addBookReact: async (req, res) => {
+    try {
+      const {
+        title,
+        author,
+        publisher,
+        publishDate,
+        isbn,
+        pageCount,
+        description,
+        idKategori,
+      } = req.body;
+      const book = await Book.create({
+        title,
+        author,
+        publisher,
+        publishDate,
+        isbn,
+        imageUrl: `images/${req.file.filename}`,
+        pageCount,
+        description,
+        idKategori,
+      });
+      const kategori = await Kategori.findOne({ _id: idKategori });
+      kategori.books.push({ _id: book._id });
+      await kategori.save();
+      res.status(201).json({ message: "Succes Tambah Buku" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  detailBookReact: async (req, res) => {
+    try {
+      const { idBuku } = req.params;
+      const book = await Book.findOne({ _id: idBuku }).populate({
+        path: "idKategori",
+        select: "id title idJenis",
+        populate: { path: "idJenis", select: "id title" },
+      });
+      res.status(200).json({ book });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
