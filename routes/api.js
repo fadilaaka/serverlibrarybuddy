@@ -13,6 +13,8 @@ router.post(
 router.get("/list-peminjaman/:idAnggota", apiController.apiUserId);
 
 // Tambahan API buat REACT ADMIN
+router.post("/login-admin", apiController.loginAdmin);
+
 // Ini buat ngolah jenis kategori
 router.get("/jenis-kategori", apiController.viewJenisKategoriReact);
 
@@ -20,5 +22,7 @@ router.get("/jenis-kategori", apiController.viewJenisKategoriReact);
 router.get("/book", apiController.viewAdminBookReact);
 router.post("/add-buku", uploadSingle, apiController.addBookReact);
 router.get("/detail-buku/:idBuku", apiController.detailBookReact);
+router.post("/edit-buku/:id", apiController.editBookReact);
+router.post("/delete-buku/:id", uploadSingle, apiController.deleteBookReact);
 
 module.exports = router;

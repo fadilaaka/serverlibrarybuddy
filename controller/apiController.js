@@ -5,6 +5,9 @@ const Book = require("../models/Book");
 const Peminjaman = require("../models/Peminjaman");
 const bcrypt = require("bcryptjs");
 const Pengembalian = require("../models/Pengembalian");
+const Admin = require("../models/Admin");
+const fs = require("fs-extra");
+const path = require("path");
 
 module.exports = {
   homePage: async (req, res) => {
@@ -153,6 +156,26 @@ module.exports = {
   },
 
   // Tambahan API buat REACT ADMIN
+  loginAdmin: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const admin = await Admin.findOne({ username: username });
+
+      if (!admin) {
+        return res.status(500).json({ message: "Invalid username & password" });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, admin.password);
+      if (!isPasswordMatch) {
+        return res.status(500).json({ message: "Password doesnt match" });
+      }
+      res.status(200).json({
+        message: "Succes login akun admin",
+        admin,
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
   viewJenisKategoriReact: async (req, res) => {
     try {
       const kategori = await Kategori.find().populate({
@@ -233,6 +256,76 @@ module.exports = {
       res.status(200).json({ book });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  editBookReact: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const {
+        updateTitle,
+        updateAuthor,
+        updatePublisher,
+        updatePublishDate,
+        updateIsbn,
+        updatePageCount,
+        updateDescription,
+        updateIdKategori,
+      } = req.body;
+      console.log("ini title :", updateTitle);
+      const book = await Book.findOne({ _id: id }).populate({
+        path: "idKategori",
+        select: "id title",
+      });
+      await Kategori.findOneAndUpdate(
+        {
+          _id: book.idKategori._id,
+        },
+        {
+          $pull: {
+            books: id,
+          },
+        }
+      );
+      await Kategori.findOneAndUpdate(
+        {
+          _id: updateIdKategori,
+        },
+        {
+          $push: {
+            books: id,
+          },
+        }
+      );
+      book.title = updateTitle;
+      book.author = updateAuthor;
+      book.publisher = updatePublisher;
+      book.publishDate = updatePublishDate;
+      book.isbn = updateIsbn;
+      book.pageCount = updatePageCount;
+      book.description = updateDescription;
+      book.idKategori = updateIdKategori;
+      await book.save();
+      res.status(201).json({ message: "Succes Edit Buku" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  deleteBookReact: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const book = await Book.findOne({ _id: id });
+      await fs.unlink(path.join(`public/${book.imageUrl}`));
+      await Kategori.findByIdAndUpdate(
+        { _id: book.idKategori },
+        {
+          $pull: { books: id },
+        },
+        { new: true }
+      );
+      await book.remove();
+      res.status(201).json({ message: "Succes Delete Buku" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
 };
