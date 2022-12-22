@@ -118,17 +118,18 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
       });
-      await Pengembalian.create({
+      const pengembalian = await Pengembalian.create({
         tanggalPeminjaman: new Date(),
         tanggalPengembalian: tanggalPengembalian,
         anggota: idAnggota,
         book: idBook,
+        waktuDikembalikan: null,
       });
 
       anggota.books.push({ _id: idBook });
       anggota.peminjaman.push({ _id: peminjaman._id });
+      anggota.pengembalian.push({ _id: pengembalian._id });
       await anggota.save();
-
       res.status(201).json({ message: "Succes pinjam buku" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
@@ -144,6 +145,13 @@ module.exports = {
         })
         .populate({
           path: "peminjaman",
+          select: "id tanggalPeminjaman tanggalPengembalian book",
+          populate: {
+            path: "book",
+          },
+        })
+        .populate({
+          path: "pengembalian",
           select: "id tanggalPeminjaman tanggalPengembalian book",
           populate: {
             path: "book",
@@ -328,4 +336,41 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
+  viewPeminjamanReact: async (req, res) => {
+    try {
+      const peminjaman = await Peminjaman.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        peminjaman
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  viewDashboard: async (req, res) => {
+    try {
+      const jenis = await Jenis.find();
+      const kategori = await Kategori.find();
+      const book = await Book.find();
+      const anggota = await Anggota.find();
+      const peminjaman = await Peminjaman.find();
+      const pengembalian = await Pengembalian.find();
+      res.status(200).json({
+        jenis: jenis.length,
+        kategori: kategori.length,
+        book: book.length,
+        anggota: anggota.length,
+        peminjaman: peminjaman.length,
+        pengembalian: pengembalian.length
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
+
+

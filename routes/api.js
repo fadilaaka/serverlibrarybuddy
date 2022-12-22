@@ -25,4 +25,10 @@ router.get("/detail-buku/:idBuku", apiController.detailBookReact);
 router.post("/edit-buku/:id", apiController.editBookReact);
 router.post("/delete-buku/:id", uploadSingle, apiController.deleteBookReact);
 
+// Ini buat Peminjaman Buku
+router.get("/peminjaman", apiController.viewPeminjamanReact);
+
+// Ini buat Dashboard
+router.get("/dashboard", apiController.viewDashboard);
+
 module.exports = router;
