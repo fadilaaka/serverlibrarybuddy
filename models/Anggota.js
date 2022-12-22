@@ -37,6 +37,12 @@ const anggotaSchema = new mongoose.Schema({
       ref: "Peminjaman",
     },
   ],
+  pengembalian: [
+    {
+      type: ObjectId,
+      ref: "Pengembalian",
+    },
+  ],
 });
 
 anggotaSchema.pre("save", async function (next) {
