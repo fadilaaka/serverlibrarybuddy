@@ -328,4 +328,41 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
+  viewPeminjamanReact: async (req, res) => {
+    try {
+      const peminjaman = await Peminjaman.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        peminjaman
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  viewDashboard: async (req, res) => {
+    try {
+      const jenis = await Jenis.find();
+      const kategori = await Kategori.find();
+      const book = await Book.find();
+      const anggota = await Anggota.find();
+      const peminjaman = await Peminjaman.find();
+      const pengembalian = await Pengembalian.find();
+      res.status(200).json({
+        jenis: jenis.length,
+        kategori: kategori.length,
+        book: book.length,
+        anggota: anggota.length,
+        peminjaman: peminjaman.length,
+        pengembalian: pengembalian.length
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
+
+
