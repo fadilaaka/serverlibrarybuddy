@@ -50,12 +50,9 @@ router.post(
   adminController.actionApprovePengembalian
 );
 router.post(
-  "/pengembalian/approve/:id",
-  adminController.actionApprovePengembalian
-);
-router.post(
   "/pengembalian/reject/:id",
   adminController.actionRejectPengembalian
 );
+router.post("/pengembalian/delete/:id", adminController.deletePengembalian);
 
 module.exports = router;

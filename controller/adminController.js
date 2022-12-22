@@ -601,7 +601,17 @@ module.exports = {
   deletePeminjaman: async (req, res) => {
     try {
       const { id } = req.params;
-      await Peminjaman.findOne({ _id: id }).remove();
+      const peminjaman = await Peminjaman.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: peminjaman.anggota },
+        {
+          $pull: {
+            peminjaman: id,
+          },
+        },
+        { new: true }
+      );
+      await peminjaman.remove();
       req.flash("alertMessage", "Success delete peminjaman");
       req.flash("alertStatus", "success");
       res.redirect("/admin/peminjaman");
@@ -670,7 +680,17 @@ module.exports = {
   deletePengembalian: async (req, res) => {
     try {
       const { id } = req.params;
-      await Pengembalian.findOne({ _id: id }).remove();
+      const pengembalian = await Pengembalian.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: pengembalian.anggota },
+        {
+          $pull: {
+            pengembalian: id,
+          },
+        },
+        { new: true }
+      );
+      await pengembalian.remove();
       req.flash("alertMessage", "Success delete pengembalian");
       req.flash("alertStatus", "success");
       res.redirect("/admin/pengembalian");

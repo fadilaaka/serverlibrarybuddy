@@ -118,17 +118,18 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
       });
-      await Pengembalian.create({
+      const pengembalian = await Pengembalian.create({
         tanggalPeminjaman: new Date(),
         tanggalPengembalian: tanggalPengembalian,
         anggota: idAnggota,
         book: idBook,
+        waktuDikembalikan: null,
       });
 
       anggota.books.push({ _id: idBook });
       anggota.peminjaman.push({ _id: peminjaman._id });
+      anggota.pengembalian.push({ _id: pengembalian._id });
       await anggota.save();
-
       res.status(201).json({ message: "Succes pinjam buku" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
@@ -144,6 +145,13 @@ module.exports = {
         })
         .populate({
           path: "peminjaman",
+          select: "id tanggalPeminjaman tanggalPengembalian book",
+          populate: {
+            path: "book",
+          },
+        })
+        .populate({
+          path: "pengembalian",
           select: "id tanggalPeminjaman tanggalPengembalian book",
           populate: {
             path: "book",
