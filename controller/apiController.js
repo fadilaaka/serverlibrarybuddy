@@ -351,6 +351,21 @@ module.exports = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+  viewPengembalianReact: async (req, res) => {
+    try {
+      const pengembalian = await Pengembalian.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        pengembalian
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
   viewDashboard: async (req, res) => {
     try {
       const jenis = await Jenis.find();
@@ -369,6 +384,44 @@ module.exports = {
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  deletePeminjaman: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const peminjaman = await Peminjaman.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: peminjaman.anggota },
+        {
+          $pull: {
+            peminjaman: id,
+          },
+        },
+        { new: true }
+      );
+      await peminjaman.remove();
+      res.status(201).json({ message: "Success Hapus Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  deletePengembalian: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const pengembalian = await Pengembalian.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: pengembalian.anggota },
+        {
+          $pull: {
+            pengembalian: id,
+          },
+        },
+        { new: true }
+      );
+      await pengembalian.remove();
+      res.status(201).json({ message: "Success Hapus Pengembalian" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
     }
   },
 };
