@@ -344,8 +344,8 @@ module.exports = {
           select: "id name",
         })
         .populate({ path: "book", select: "id title" });
-        res.status(200).json({
-        peminjaman
+      res.status(200).json({
+        peminjaman,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
@@ -365,12 +365,10 @@ module.exports = {
         book: book.length,
         anggota: anggota.length,
         peminjaman: peminjaman.length,
-        pengembalian: pengembalian.length
+        pengembalian: pengembalian.length,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
 };
-
-
