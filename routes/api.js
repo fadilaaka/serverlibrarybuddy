@@ -17,6 +17,14 @@ router.post("/login-admin", apiController.loginAdmin);
 
 // Ini buat ngolah jenis kategori
 router.get("/jenis-kategori", apiController.viewJenisKategoriReact);
+router.get("/detail-jenis/:id", apiController.detailJenis);
+router.get("/detail-kategori/:id", apiController.detailKategori);
+router.post("/add-jenis", apiController.addJenisReact);
+router.post("/delete-jenis/:id", apiController.deleteJenis);
+router.post("/edit-jenis/:id", apiController.editJenisReact);
+router.post("/add-kategori", apiController.addKategoriReact);
+router.post("/delete-kategori/:id", apiController.deleteKategoriReact);
+router.post("/edit-kategori/:id", apiController.editKategoriReact);
 
 // Ini buat Pengolahan buku
 router.get("/book", apiController.viewAdminBookReact);
