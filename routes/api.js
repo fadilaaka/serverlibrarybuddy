@@ -17,6 +17,14 @@ router.post("/login-admin", apiController.loginAdmin);
 
 // Ini buat ngolah jenis kategori
 router.get("/jenis-kategori", apiController.viewJenisKategoriReact);
+router.get("/detail-jenis/:id", apiController.detailJenis);
+router.get("/detail-kategori/:id", apiController.detailKategori);
+router.post("/add-jenis", apiController.addJenisReact);
+router.post("/delete-jenis/:id", apiController.deleteJenis);
+router.post("/edit-jenis/:id", apiController.editJenisReact);
+router.post("/add-kategori", apiController.addKategoriReact);
+router.post("/delete-kategori/:id", apiController.deleteKategoriReact);
+router.post("/edit-kategori/:id", apiController.editKategoriReact);
 
 // Ini buat Pengolahan buku
 router.get("/book", apiController.viewAdminBookReact);
@@ -27,6 +35,15 @@ router.post("/delete-buku/:id", uploadSingle, apiController.deleteBookReact);
 
 // Ini buat Peminjaman Buku
 router.get("/peminjaman", apiController.viewPeminjamanReact);
+router.post("/approve-peminjaman/:id", apiController.approvePeminjaman);
+router.post("/reject-peminjaman/:id", apiController.rejectPeminjaman);
+router.post("/delete-peminjaman/:id", apiController.deletePeminjaman);
+
+// Ini buat Pengembalian Buku
+router.get("/pengembalian", apiController.viewPengembalianReact);
+router.post("/reject-peminjaman/:id", apiController.rejectPeminjaman);
+router.post("/approve-pengembalian/:id", apiController.approvePengembalian);
+router.post("/delete-pengembalian/:id", apiController.deletePengembalian);
 
 // Ini buat Dashboard
 router.get("/dashboard", apiController.viewDashboard);

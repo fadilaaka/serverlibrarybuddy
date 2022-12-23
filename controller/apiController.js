@@ -336,21 +336,6 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
-  viewPeminjamanReact: async (req, res) => {
-    try {
-      const peminjaman = await Peminjaman.find()
-        .populate({
-          path: "anggota",
-          select: "id name",
-        })
-        .populate({ path: "book", select: "id title" });
-      res.status(200).json({
-        peminjaman,
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  },
   viewDashboard: async (req, res) => {
     try {
       const jenis = await Jenis.find();
@@ -369,6 +354,255 @@ module.exports = {
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+
+  addJenisReact: async (req, res) => {
+    try {
+      const { title } = req.body;
+      await Jenis.create({ title });
+      res.status(201).json({
+        message:"Berhasil Menambahkan Jenis"
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error:${error}` });
+    }
+  },
+
+  deleteJenis: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await Jenis.findOne({ _id: id }).remove();
+      res.status(201).json({
+        message:"Berhasil detele jenis"
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error:${error}` });
+    }
+  },
+
+  editJenisReact: async (req, res) => {
+    try {
+      const {title } = req.body;
+      const {id} = req.params;
+      await Jenis.findByIdAndUpdate(
+        { _id: id },
+        {
+          title: title,
+        }
+      );
+      res.status(201).json({
+        message:"Berhasil edit jenis"
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error:${error}` });
+    }
+  },
+
+  detailJenis: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const jenis = await Jenis.findById({ _id: id });
+      res.status(200).json({
+        message: "Succes get detail jenis",
+        jenis,
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  addKategoriReact: async (req, res) => {
+    try {
+      const { title, idJenis } = req.body;
+      const newKategory = { title, idJenis };
+      const kategori = await Kategori.create(newKategory);
+      const jenis = await Jenis.findOne({ _id: idJenis });
+      jenis.idKategori.push({ _id: kategori._id });
+      await jenis.save();
+      res.status(201).json({
+        message: "Succes add kategori",
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  deleteKategoriReact: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const kategori = await Kategori.findOne({ _id: id });
+      await Jenis.findByIdAndUpdate(
+        { _id: kategori.idJenis },
+        {
+          $pull: { idKategori: id },
+        },
+        { new: true }
+      );
+      await kategori.remove();
+      res.status(201).json({ message: "Success delete kategori"});
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  detailKategori: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const kategori = await Kategori.findById({ _id: id })
+      .populate({
+        path: "idJenis",
+        select: "id title"
+      });
+      res.status(200).json({
+        message: "Succes get detail kategori",
+        kategori,
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  editKategoriReact: async (req, res) => {
+    try {
+      const {id} = req.params;
+      const { title, idJenis } = req.body;
+      const kategori = await Kategori.findOne({ _id: id });
+      await Jenis.findOneAndUpdate(
+        {
+          _id: kategori.idJenis,
+        },
+        {
+          $pull: {
+            idKategori: id,
+          },
+        }
+      );
+      await Jenis.findOneAndUpdate(
+        {
+          _id: idJenis,
+        },
+        {
+          $push: {
+            idKategori: kategori._id,
+          },
+        }
+      );
+      kategori.title = title;
+      kategori.idJenis = idJenis;
+      await kategori.save();
+      res.status(201).json({
+        message: "Success Edit kategori",
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error: ${error}` });
+    }
+  },
+  viewPeminjamanReact: async (req, res) => {
+    try {
+      const peminjaman = await Peminjaman.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        peminjaman
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  approvePeminjaman: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Peminjaman.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "sudah disetujui",
+        }
+      );
+      res.status(201).json({ message: "Success Approve Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  rejectPeminjaman: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Peminjaman.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "tidak disetujui",
+        }
+      );
+      res.status(201).json({ message: "Success Approve Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },  
+  deletePeminjaman: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const peminjaman = await Peminjaman.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: peminjaman.anggota },
+        {
+          $pull: {
+            peminjaman: id,
+          },
+        },
+        { new: true }
+      );
+      await peminjaman.remove();
+      res.status(201).json({ message: "Success Hapus Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  viewPengembalianReact: async (req, res) => {
+    try {
+      const pengembalian = await Pengembalian.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        pengembalian
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  approvePengembalian: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Pengembalian.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "sudah dikembalikan",
+          waktuDikembalikan: new Date(),
+        }
+      );
+      res.status(201).json({ message: "Success Approve Pengembalian" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },  
+  deletePengembalian: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const pengembalian = await Pengembalian.findOne({ _id: id });
+      await Anggota.findByIdAndUpdate(
+        { _id: pengembalian.anggota },
+        {
+          $pull: {
+            pengembalian: id,
+          },
+        },
+        { new: true }
+      );
+      await pengembalian.remove();
+      res.status(201).json({ message: "Success Hapus Pengembalian" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
     }
   },
 };
