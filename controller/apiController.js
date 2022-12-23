@@ -336,36 +336,6 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
   },
-  viewPeminjamanReact: async (req, res) => {
-    try {
-      const peminjaman = await Peminjaman.find()
-        .populate({
-          path: "anggota",
-          select: "id name",
-        })
-        .populate({ path: "book", select: "id title" });
-        res.status(200).json({
-        peminjaman
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  },
-  viewPengembalianReact: async (req, res) => {
-    try {
-      const pengembalian = await Pengembalian.find()
-        .populate({
-          path: "anggota",
-          select: "id name",
-        })
-        .populate({ path: "book", select: "id title" });
-        res.status(200).json({
-        pengembalian
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  },
   viewDashboard: async (req, res) => {
     try {
       const jenis = await Jenis.find();
@@ -386,6 +356,49 @@ module.exports = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+  viewPeminjamanReact: async (req, res) => {
+    try {
+      const peminjaman = await Peminjaman.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        peminjaman
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  approvePeminjaman: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Peminjaman.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "sudah disetujui",
+        }
+      );
+      res.status(201).json({ message: "Success Approve Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  rejectPeminjaman: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Peminjaman.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "tidak disetujui",
+        }
+      );
+      res.status(201).json({ message: "Success Approve Peminjaman" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },  
   deletePeminjaman: async (req, res) => {
     try {
       const { id } = req.params;
@@ -405,6 +418,36 @@ module.exports = {
       res.status(500).json({ message: `Internal Server Error : ${error}` });
     }
   },
+  viewPengembalianReact: async (req, res) => {
+    try {
+      const pengembalian = await Pengembalian.find()
+        .populate({
+          path: "anggota",
+          select: "id name",
+        })
+        .populate({ path: "book", select: "id title" });
+        res.status(200).json({
+        pengembalian
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  approvePengembalian: async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Pengembalian.findOneAndUpdate(
+        { _id: id },
+        {
+          status: "sudah dikembalikan",
+          waktuDikembalikan: new Date(),
+        }
+      );
+      res.status(201).json({ message: "Success Approve Pengembalian" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },  
   deletePengembalian: async (req, res) => {
     try {
       const { id } = req.params;
@@ -425,5 +468,3 @@ module.exports = {
     }
   },
 };
-
-
