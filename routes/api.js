@@ -35,6 +35,15 @@ router.post("/delete-buku/:id", uploadSingle, apiController.deleteBookReact);
 
 // Ini buat Peminjaman Buku
 router.get("/peminjaman", apiController.viewPeminjamanReact);
+router.post("/approve-peminjaman/:id", apiController.approvePeminjaman);
+router.post("/reject-peminjaman/:id", apiController.rejectPeminjaman);
+router.post("/delete-peminjaman/:id", apiController.deletePeminjaman);
+
+// Ini buat Pengembalian Buku
+router.get("/pengembalian", apiController.viewPengembalianReact);
+router.post("/reject-peminjaman/:id", apiController.rejectPeminjaman);
+router.post("/approve-pengembalian/:id", apiController.approvePengembalian);
+router.post("/delete-pengembalian/:id", apiController.deletePengembalian);
 
 // Ini buat Dashboard
 router.get("/dashboard", apiController.viewDashboard);
