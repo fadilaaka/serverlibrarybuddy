@@ -124,6 +124,7 @@ module.exports = {
         anggota: idAnggota,
         book: idBook,
         waktuDikembalikan: null,
+        peminjaman: peminjaman._id,
       });
 
       anggota.books.push({ _id: idBook });
@@ -362,7 +363,7 @@ module.exports = {
       const { title } = req.body;
       await Jenis.create({ title });
       res.status(201).json({
-        message:"Berhasil Menambahkan Jenis"
+        message: "Berhasil Menambahkan Jenis",
       });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error:${error}` });
@@ -374,7 +375,7 @@ module.exports = {
       const { id } = req.params;
       await Jenis.findOne({ _id: id }).remove();
       res.status(201).json({
-        message:"Berhasil detele jenis"
+        message: "Berhasil detele jenis",
       });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error:${error}` });
@@ -383,8 +384,8 @@ module.exports = {
 
   editJenisReact: async (req, res) => {
     try {
-      const {title } = req.body;
-      const {id} = req.params;
+      const { title } = req.body;
+      const { id } = req.params;
       await Jenis.findByIdAndUpdate(
         { _id: id },
         {
@@ -392,7 +393,7 @@ module.exports = {
         }
       );
       res.status(201).json({
-        message:"Berhasil edit jenis"
+        message: "Berhasil edit jenis",
       });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error:${error}` });
@@ -438,7 +439,7 @@ module.exports = {
         { new: true }
       );
       await kategori.remove();
-      res.status(201).json({ message: "Success delete kategori"});
+      res.status(201).json({ message: "Success delete kategori" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }
@@ -446,10 +447,9 @@ module.exports = {
   detailKategori: async (req, res) => {
     try {
       const { id } = req.params;
-      const kategori = await Kategori.findById({ _id: id })
-      .populate({
+      const kategori = await Kategori.findById({ _id: id }).populate({
         path: "idJenis",
-        select: "id title"
+        select: "id title",
       });
       res.status(200).json({
         message: "Succes get detail kategori",
@@ -461,7 +461,7 @@ module.exports = {
   },
   editKategoriReact: async (req, res) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const { title, idJenis } = req.body;
       const kategori = await Kategori.findOne({ _id: id });
       await Jenis.findOneAndUpdate(
@@ -502,8 +502,8 @@ module.exports = {
           select: "id name",
         })
         .populate({ path: "book", select: "id title" });
-        res.status(200).json({
-        peminjaman
+      res.status(200).json({
+        peminjaman,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
@@ -536,7 +536,7 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error : ${error}` });
     }
-  },  
+  },
   deletePeminjaman: async (req, res) => {
     try {
       const { id } = req.params;
@@ -564,28 +564,37 @@ module.exports = {
           select: "id name",
         })
         .populate({ path: "book", select: "id title" });
-        res.status(200).json({
-        pengembalian
+      res.status(200).json({
+        pengembalian,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
   approvePengembalian: async (req, res) => {
-    const { id } = req.params;
+    const { idPengembalian } = req.params;
     try {
-      await Pengembalian.findOneAndUpdate(
-        { _id: id },
+      const pengembalian = await Pengembalian.findOneAndUpdate(
+        { _id: idPengembalian },
         {
           status: "sudah dikembalikan",
           waktuDikembalikan: new Date(),
         }
       );
+      await Anggota.findByIdAndUpdate(
+        { _id: pengembalian.anggota },
+        {
+          $pull: {
+            peminjaman: pengembalian.peminjaman,
+          },
+        },
+        { new: true }
+      );
       res.status(201).json({ message: "Success Approve Pengembalian" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error : ${error}` });
     }
-  },  
+  },
   deletePengembalian: async (req, res) => {
     try {
       const { id } = req.params;
@@ -601,6 +610,55 @@ module.exports = {
       );
       await pengembalian.remove();
       res.status(201).json({ message: "Success Hapus Pengembalian" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  viewAnggotaReact: async (req, res) => {
+    try {
+      const anggota = await Anggota.find();
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.status(200).json({
+        anggota,
+      });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  editAnggotaReact: async (req, res) => {
+    try {
+      const { id, name, telp, alamat, username, password } = req.body;
+      const anggota = await Anggota.findOne({ _id: id });
+      const isPasswordMatch = await bcrypt.compare(password, anggota.password);
+      if (!isPasswordMatch) {
+        anggota.name = name;
+        anggota.telp = telp;
+        anggota.alamat = alamat;
+        anggota.username = username;
+        anggota.password = password;
+      } else {
+        anggota.name = name;
+        anggota.telp = telp;
+        anggota.alamat = alamat;
+        anggota.username = username;
+      }
+      await anggota.save();
+      res.status(201).json({ message: "Success Edit Anggota" });
+    } catch (error) {
+      res.status(500).json({ message: `Internal Server Error : ${error}` });
+    }
+  },
+  deleteAnggotaReact: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const anggota = await Anggota.findOne({ _id: id });
+      if (anggota.imageUrl !== "") {
+        await fs.unlink(path.join(`public/${anggota.imageUrl}`));
+      }
+      await anggota.remove();
+      res.status(201).json({ message: "Success hapus anggota" });
     } catch (error) {
       res.status(500).json({ message: `Internal Server Error : ${error}` });
     }

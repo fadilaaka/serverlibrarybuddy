@@ -486,7 +486,6 @@ module.exports = {
 
   viewAnggota: async (req, res) => {
     try {
-      const jenis = await Jenis.find();
       const anggota = await Anggota.find();
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");

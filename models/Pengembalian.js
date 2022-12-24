@@ -25,6 +25,10 @@ const pengembalianSchema = new mongoose.Schema({
     type: ObjectId,
     ref: "Book",
   },
+  peminjaman: {
+    type: ObjectId,
+    ref: "Book",
+  },
 });
 
 module.exports = mongoose.model("Pengembalian", pengembalianSchema);

@@ -42,10 +42,17 @@ router.post("/delete-peminjaman/:id", apiController.deletePeminjaman);
 // Ini buat Pengembalian Buku
 router.get("/pengembalian", apiController.viewPengembalianReact);
 router.post("/reject-peminjaman/:id", apiController.rejectPeminjaman);
-router.post("/approve-pengembalian/:id", apiController.approvePengembalian);
+router.post(
+  "/approve-pengembalian/:idPengembalian",
+  apiController.approvePengembalian
+);
 router.post("/delete-pengembalian/:id", apiController.deletePengembalian);
 
 // Ini buat Dashboard
 router.get("/dashboard", apiController.viewDashboard);
+
+//Ini buat View Anggota
+router.get("/anggota-perpus", apiController.viewAnggotaReact);
+router.post("/delete-anggota-perpus/:id", apiController.deleteAnggotaReact);
 
 module.exports = router;
