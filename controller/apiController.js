@@ -629,7 +629,8 @@ module.exports = {
   },
   editAnggotaReact: async (req, res) => {
     try {
-      const { id, name, telp, alamat, username, password } = req.body;
+      const { id } = req.params;
+      const { name, telp, alamat, username, password } = req.body;
       const anggota = await Anggota.findOne({ _id: id });
       const isPasswordMatch = await bcrypt.compare(password, anggota.password);
       if (!isPasswordMatch) {

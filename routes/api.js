@@ -53,6 +53,7 @@ router.get("/dashboard", apiController.viewDashboard);
 
 //Ini buat View Anggota
 router.get("/anggota-perpus", apiController.viewAnggotaReact);
+router.post("/edit-anggota-perpus/:id", apiController.editAnggotaReact);
 router.post("/delete-anggota-perpus/:id", apiController.deleteAnggotaReact);
 
 module.exports = router;
