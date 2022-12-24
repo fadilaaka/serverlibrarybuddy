@@ -146,14 +146,14 @@ module.exports = {
         })
         .populate({
           path: "peminjaman",
-          select: "id tanggalPeminjaman tanggalPengembalian book",
+          select: "id tanggalPeminjaman tanggalPengembalian status book",
           populate: {
             path: "book",
           },
         })
         .populate({
           path: "pengembalian",
-          select: "id tanggalPeminjaman tanggalPengembalian book",
+          select: "id tanggalPeminjaman tanggalPengembalian status book",
           populate: {
             path: "book",
           },
